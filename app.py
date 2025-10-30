@@ -1,31 +1,18 @@
 from flask import Flask, request, jsonify
 import psycopg2
 import os
-import socket  # 👈 Asegúrate de tener esta importación
 
 app = Flask(__name__)
 
-# ✅ Resolver el host IPv4 antes de la conexión
-db_host = os.getenv("DB_HOST")
-if db_host:
-    try:
-        db_host = socket.gethostbyname(db_host)
-    except Exception as e:
-        print(f"Error resolviendo el host IPv4: {e}")
+# ✅ Cadena de conexión directa (de Supabase)
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-# ✅ Conexión con Supabase (PostgreSQL)
-conn = psycopg2.connect(
-    host=db_host,
-    database=os.getenv("DB_NAME"),
-    user=os.getenv("DB_USER"),
-    password=os.getenv("DB_PASS"),
-    port=os.getenv("DB_PORT"),
-    sslmode="require"
-)
+conn = psycopg2.connect(DATABASE_URL, sslmode="require")
 
 @app.route('/')
 def home():
     return "¡Conexión exitosa con Supabase y Flask!"
+
 
 
 # ---------------- CRUD ---------------- #
@@ -88,5 +75,6 @@ def eliminar_estudiante(numero_ma):
 
 if __name__ == '__main__':
     app.run()
+
 
 
