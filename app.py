@@ -1,18 +1,28 @@
 from flask import Flask, request, jsonify
 import psycopg2
 import os
+import socket
 
 app = Flask(__name__)
 
-# ✅ Cadena de conexión directa (de Supabase)
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-conn = psycopg2.connect(DATABASE_URL, sslmode="require")
+# Nombre del host (de tu Supabase)
+host = "db.eruitxmpherlpvsfbxrc.supabase.co"
+
+# 🔹 Forzar IPv4 (Render usa IPv6 por defecto, que Supabase no acepta)
+ipv4_host = socket.gethostbyname(host)
+print(f"Conectando a Supabase con IPv4: {ipv4_host}")
+
+# Reemplazar el host original con la IP IPv4
+DATABASE_URL_IPV4 = DATABASE_URL.replace(host, ipv4_host)
+
+# Conectarse a la base de datos usando IPv4
+conn = psycopg2.connect(DATABASE_URL_IPV4, sslmode="require")
 
 @app.route('/')
 def home():
     return "¡Conexión exitosa con Supabase y Flask!"
-
 
 
 # ---------------- CRUD ---------------- #
@@ -92,4 +102,5 @@ def ver_estudiantes():
 
 if __name__ == '__main__':
     app.run()
+
 
