@@ -71,10 +71,25 @@ def eliminar_estudiante(numero_ma):
     cur.close()
     return jsonify({"message": "Estudiante eliminado correctamente"})
 
-# -------------------------------------- #
+@app.route('/ver_estudiantes')
+def ver_estudiantes():
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM estudiantes;")
+    rows = cur.fetchall()
+    cur.close()
+
+    html = "<h2>Lista de Estudiantes</h2>"
+    html += "<table border='1' cellpadding='5'><tr>"
+    html += "<th>Numero MA</th><th>Nombre</th><th>Apellido Materno</th><th>Apellido Paterno</th>"
+    html += "<th>Fecha Nac.</th><th>Email</th><th>Telefono</th><th>Fecha Ingreso</th><th>Estatus</th></tr>"
+
+    for r in rows:
+        html += f"<tr>{''.join([f'<td>{c}</td>' for c in r])}</tr>"
+
+    html += "</table>"
+    return html
+
 
 if __name__ == '__main__':
     app.run()
-
-
 
