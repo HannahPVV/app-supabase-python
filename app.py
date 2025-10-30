@@ -6,11 +6,12 @@ app = Flask(__name__)
 
 # Conexión con la base de datos Supabase
 conn = psycopg2.connect(
-    host=os.getenv("DB_HOST"),
+    host=host_ipv4,
     database=os.getenv("DB_NAME"),
     user=os.getenv("DB_USER"),
     password=os.getenv("DB_PASS"),
-    port=os.getenv("DB_PORT")
+    port=os.getenv("DB_PORT"),
+    sslmode="require"
 )
 
 @app.route('/')
@@ -77,3 +78,4 @@ def eliminar_estudiante(numero_ma):
 
 if __name__ == '__main__':
     app.run()
+
